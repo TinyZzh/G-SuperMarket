@@ -74,20 +74,23 @@ public class Test : MonoBehaviour
             var obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
             obj.transform.position = new Vector3(item.X, 0, item.Y);
             var meshRenderer = obj.GetComponent<MeshRenderer>();
-            if (path.First.Value.Equals(item))
-            {
-                meshRenderer.material = materials[0];
-                obj.name = "Start";
-            }
-            else if (path.Last.Value.Equals(item))
-            {
-                meshRenderer.material = materials[1];
-                obj.name = "End";
-            }
-            else
-            {
-                meshRenderer.material = materials[3];
-            }
+
+            meshRenderer.material = materials[3];
+
+            //if (path.First.Value.Equals(item))
+            //{
+            //    meshRenderer.material = materials[0];
+            //    obj.name = "Start";
+            //}
+            //else if (path.Last.Value.Equals(item))
+            //{
+            //    meshRenderer.material = materials[1];
+            //    obj.name = "End";
+            //}
+            //else
+            //{
+            //    meshRenderer.material = materials[3];
+            //}
         }
     }
 
