@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Okra.Utilities;
+﻿
 
-namespace Okra.Unit
+using Okra.Tiled.AStar;
+
+namespace Okra.Tiled
 {
     /// <summary>
     /// 地图格子

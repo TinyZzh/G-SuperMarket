@@ -1,15 +1,12 @@
 ﻿using System;
-using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using Okra.Utilities;
 
-namespace Okra.Utilities
+namespace Okra.Tiled.AStar
 {
     /// <summary>
     /// A*寻路算法. 由Okra框架中的A*寻路算法改成C#版本
     /// </summary>
-    public class AStarAlgorithm
+    public class PathUtil
     {
         /// <summary>
         /// vertical and parallel path estimate cost
@@ -29,7 +26,7 @@ namespace Okra.Utilities
         /// <param name="y2">end point y coordinate</param>
         /// <param name="blocks">the tiled map blocks info.</param>
         /// <returns>Return the shortest path from start point to end point.otherwise return empty list.</returns>
-        public static LinkedList<Point> Find(int x1, int y1, int x2, int y2, int[,] blocks)
+        public static LinkedList<Point> Find(int x1, int y1, int x2, int y2, Grid[,] blocks)
         {
             return Find(new Node(x1, y1, null), new Node(x2, y2, null), blocks, true);
         }
@@ -44,13 +41,14 @@ namespace Okra.Utilities
         /// <param name="blocks">the tiled map blocks info.</param>
         /// <param name="allowDiagonals">is allow diagonal.</param>
         /// <returns>Return the shortest path from start point to end point.otherwise return empty list.</returns>
-        public static LinkedList<Point> Find(int x1, int y1, int x2, int y2, int[,] blocks, bool allowDiagonals)
+        public static LinkedList<Point> Find(int x1, int y1, int x2, int y2, Grid[,] blocks, bool allowDiagonals)
         {
             if (blocks == null)
             {
                 throw new NullReferenceException("blocks");
             }
-            if (blocks[x1, y1] != 1 || blocks[x2, y2] != 1)
+            if (blocks[x1, y1] != null && !blocks[x1, y1].IsWalkable() ||
+                blocks[x2, y2] != null && !blocks[x2, y2].IsWalkable())
             {
                 throw new Exception("Target point unreachable.");
             }
@@ -76,7 +74,7 @@ namespace Okra.Utilities
         /// <example>
         ///     Dependency <see cref="Point"/> {@link Point#equals} method
         /// </example>
-        private static LinkedList<Point> Find(Node sNode, Node eNode, int[,] blocks, bool allowDiagonals)
+        private static LinkedList<Point> Find(Node sNode, Node eNode, Grid[,] blocks, bool allowDiagonals)
         {
             List<Node> opened = new List<Node>();
             HashSet<Node> cked = new HashSet<Node>();
@@ -100,7 +98,7 @@ namespace Okra.Utilities
                 List<Node> rounds = Rounds(minNode, blocks, allowDiagonals);
                 foreach (var current in rounds)
                 {
-                    if (blocks[current.X, current.Y] != 1)
+                    if (blocks[current.X, current.Y] != null && !blocks[current.X, current.Y].IsWalkable())
                     {
                         cked.Add(current);
                         continue;
@@ -139,7 +137,7 @@ namespace Okra.Utilities
         /**
          * @return Return all node which surround the center point.
          */
-        private static List<Node> Rounds(Node center, int[,] blocks, bool allowDiagonals)
+        private static List<Node> Rounds(Node center, Grid[,] blocks, bool allowDiagonals)
         {
             List<Node> result = new List<Node>();
             if (blocks == null || blocks.Length <= 0)
@@ -222,7 +220,7 @@ namespace Okra.Utilities
          *
          * @return Return true if position out of bounds. otherwise false.
          */
-        private static bool IsOutOfBounds(int x, int y, int[,] blocks)
+        private static bool IsOutOfBounds(int x, int y, Grid[,] blocks)
         {
             return (x < 0 || x >= blocks.GetLength(0) || y < 0 || y >= blocks.GetLength(1));
         }

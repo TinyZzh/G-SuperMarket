@@ -1,10 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
-using Okra.Unit;
-using Okra.Utilities;
-using UnityEngine.UI;
+using Okra.Tiled;
+using Okra.Tiled.AStar;
 
 namespace Game.SuperMarket
 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Okra.Unit
+namespace Okra.Tiled
 {
     /// <summary>
     /// 店铺摆设.

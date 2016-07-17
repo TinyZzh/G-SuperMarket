@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 
-namespace Okra.Utilities
+namespace Okra.Tiled.AStar
 {
     public class Point
     {
