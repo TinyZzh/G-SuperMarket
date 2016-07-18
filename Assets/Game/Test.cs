@@ -94,10 +94,11 @@ public class Test : MonoBehaviour
         }
     }
 
-    public static void ShowNode(Point point, Material material)
+    public static void ShowNode(Point point, string name, Material material)
     {
         var obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
         obj.transform.position = new Vector3(point.X, 0, point.Y);
+        obj.transform.name = name;
         var meshRenderer = obj.GetComponent<MeshRenderer>();
         meshRenderer.material = material;
     }

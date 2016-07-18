@@ -6,9 +6,9 @@ using Okra.Tiled.AStar;
 namespace Game.SuperMarket
 {
     /// <summary>
-    /// 超市
+    /// 超市组件
     /// </summary>
-    public class Market : MonoBehaviour
+    public class CoMarket : MonoBehaviour
     {
         /// <summary>
         /// 超市等级
@@ -80,18 +80,18 @@ namespace Game.SuperMarket
                     if (i == x1 && j == y1)  // TODO: 2.入口
                     {
                         Layout[i, j] = new Grid(new Point(i, j), GridType.Normal, 0);
-                        Test.ShowNode(new Point(x1, y1), Green);
+                        Test.ShowNode(new Point(x1, y1), "Start", Green);
                     }
                     else if (i == x2 && j == y2)  // TODO: 2.出口
                     {
                         Layout[i, j] = new Grid(new Point(i, j), GridType.Normal, 0);
-                        Test.ShowNode(new Point(x2, y2), Red);
+                        Test.ShowNode(new Point(x2, y2), "End", Red);
                         Debug.Log("Red");
                     }
                     else if (i == 0 || j == 0 || i == width - 1 || j == height - 1)
                     {
                         Layout[i, j] = new Grid(new Point(i, j), GridType.Wall, 0);
-                        Test.ShowNode(new Point(i, j), Blue);
+                        Test.ShowNode(new Point(i, j), "Cube" + (i * width + j), Blue);
                     }
                     else
                     {
