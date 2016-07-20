@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 using Okra.Tiled;
 using Okra.Tiled.AStar;
 
@@ -51,16 +52,32 @@ namespace Game.SuperMarket
 
             Layout[start.X, start.Y] = null;
             Layout[end.X, end.Y] = null;
-
+            
             var path = PathUtil.Find(start.X, start.Y, end.X, end.Y, Layout, false);
+
+
+            
+            var mUnitGo = Test.ShowNode(start, "coUnit", Red);
+            var coUnit = mUnitGo.AddComponent<CoUnit>();
+            coUnit.Path = path.ToArray();
+            coUnit.Index = 0;
+            coUnit.Unit = mUnitGo.transform;
+            
+           
+
+            
+
+            
             //var path = AStarAlgorithm.Find(5, 3, 6, 3, blocks, false);
             Debug.Log("路径：" + path.Count);
+
             //path.AddFirst(new Point(start.X, start.Y));
             //path.AddLast(new Point(end.X, end.Y));
-            Test.ShowPath(path, new[]
-            {
-                Red, Green, Blue, Purple
-            });
+
+            //Test.ShowPath(path, new[]
+            //{
+            //    Red, Green, Blue, Purple
+            //});
 
         }
 
