@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Okra.Tiled;
+using UnityEngine.EventSystems;
 
 namespace Game.SuperMarket
 {
@@ -23,33 +24,40 @@ namespace Game.SuperMarket
         {
             if (Input.GetMouseButtonDown(0))
             {
-                Ray mRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
-                if (Physics.Raycast(mRay, out hit))
+
+                if (EventSystem.current.IsPointerOverGameObject())
                 {
-                    Debug.Log(hit.point);
-                    Debug.Log("x:" + hit.point.x + ", z:" + hit.point.z);
-
-                    Debug.Log("Name:" + hit.collider.transform.name);
-
-                    var hcTrans = hit.collider.transform;
-
-                    // 显示面板
-                    var point = Camera.main.WorldToScreenPoint(hit.collider.transform.position);
-                    var rectTransform = BtnGo.GetComponent<RectTransform>();
-                    if (rectTransform != null)
+                    Debug.Log("点击到UI");
+                }
+                else
+                {
+                    Ray mRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    RaycastHit hit;
+                    if (Physics.Raycast(mRay, out hit))
                     {
-                        rectTransform.position = point;
+                        Debug.Log(hit.point);
+                        Debug.Log("x:" + hit.point.x + ", z:" + hit.point.z);
+
+                        Debug.Log("Name:" + hit.collider.transform.name);
+
+                        var hcTrans = hit.collider.transform;
+
+                        // 显示面板
+                        var point = Camera.main.WorldToScreenPoint(hit.collider.transform.position);
+                        var rectTransform = BtnGo.GetComponent<RectTransform>();
+                        if (rectTransform != null)
+                        {
+                            rectTransform.position = point;
+
+                        }
+
+
 
                     }
-
-                    var shelf = hcTrans.GetComponent<Shelf>();
-                    if (shelf != null)
+                    else
                     {
-                        // Vector2 screenpos = Camera.main.WorldToScreenPoint(transform.position);
+                        // 关闭UI
                     }
-
-
                 }
             }
 

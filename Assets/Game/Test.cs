@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using Game.SuperMarket;
 using Okra.Tiled.AStar;
 
 public class Test : MonoBehaviour
@@ -101,6 +102,9 @@ public class Test : MonoBehaviour
         obj.transform.name = name;
         var meshRenderer = obj.GetComponent<MeshRenderer>();
         meshRenderer.material = material;
+
+        obj.AddComponent<CoFurnish>();
+
         return obj;
     }
 
