@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace Game.SuperMarket
+namespace Game.SuperMarket.Impl
 {
     public class Consts
     {

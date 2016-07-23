@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using Game.SuperMarket;
+using Game.SuperMarket.Component;
 using Okra.Tiled.AStar;
 
 public class Test : MonoBehaviour

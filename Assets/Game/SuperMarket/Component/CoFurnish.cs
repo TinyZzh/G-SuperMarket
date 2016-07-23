@@ -1,7 +1,7 @@
 ﻿using Okra.Tiled;
 using UnityEngine;
 
-namespace Game.SuperMarket
+namespace Game.SuperMarket.Component
 {
     /// <summary>
     /// 摆设组件
