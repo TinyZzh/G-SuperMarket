@@ -1,5 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Game.SuperMarket.Component;
+using Okra.Tiled.AStar;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Game.SuperMarket.Service
 {
@@ -9,6 +13,7 @@ namespace Game.SuperMarket.Service
     public class GoManager
     {
 
+        #region 简单的对象池
         private Dictionary<string, GameObject> _resources = new Dictionary<string, GameObject>();
 
         public GameObject GetGameObject(string objName, string resName, Vector3 position, Transform parent)
@@ -40,8 +45,36 @@ namespace Game.SuperMarket.Service
         {
             DestroyObject(tf.gameObject);
         }
+        #endregion
 
 
+        public static GameObject UpdateCube(GameObject go, Vector3 point, string name, Material material, Type[] components)
+        {
+
+            return go;
+        }
+
+        /// <summary>
+        /// 创建新方块
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="name"></param>
+        /// <param name="material"></param>
+        /// <param name="components"></param>
+        /// <returns></returns>
+        public static GameObject CreateCube(Vector3 point, string name, Material material, Type[] components)
+        {
+            var obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            foreach (var component in components)
+            {
+                obj.AddComponent(component);
+            }
+            obj.transform.position = point;
+            obj.transform.name = name;
+            var meshRenderer = obj.GetComponent<MeshRenderer>();
+            meshRenderer.material = material;
+            return obj;
+        }
 
     }
 }
