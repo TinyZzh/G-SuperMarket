@@ -1,6 +1,9 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 using Game.SuperMarket.Impl;
 using Game.SuperMarket.Service;
+using Okra.Tiled;
+using Okra.Tiled.AStar;
 using UnityEngine.EventSystems;
 
 namespace Game.SuperMarket.Component
@@ -16,10 +19,7 @@ namespace Game.SuperMarket.Component
 
         public CoMarket Market;
 
-        public GameObject Canvas;
-
-        public Transform MouseClickPanel;
-
+        #region  UI面板
 
         /// <summary>
         /// 左上角角色信息
@@ -33,24 +33,22 @@ namespace Game.SuperMarket.Component
         /// 活动小图标
         /// </summary>
         public GameObject ActivityPanel;
+        /// <summary>
+        /// 鼠标上的Go
+        /// </summary>
+        public GameObject GoOnMouse;
 
+        public GameObject Canvas;
 
-
+        public Transform MouseClickPanel;
+        #endregion
 
         // Use this for initialization
         void Start()
         {
             if (Canvas == null)
                 Canvas = GameObject.Find("Canvas");
-            //if (MouseClickPanel == null)
-            //{
-            //    //MouseClickPanel = Canvas.transform.FindChild("MouseClickPanel");
-            //    var go = GoManager.GetGameObject("MouseClickPanel", "PfbClick", Vector3.down, Canvas.transform);
-            //    MouseClickPanel = go.transform;
-
-            //}
-
-
+            Market = transform.GetComponent<CoMarket>();
 
 
         }
@@ -58,6 +56,8 @@ namespace Game.SuperMarket.Component
         void Update()
         {
             OnMouseClick();
+
+            OnMouseMove();
         }
 
         void FixedUpdate()
@@ -73,13 +73,30 @@ namespace Game.SuperMarket.Component
             // Mouse Click Event
             if (Input.GetMouseButtonDown(0))
             {
+                #region 摆放事件
+                var mousePosition = Input.mousePosition;
+                if (TempGoFurnish != null)
+                {
+                    Market.Layout[TemPoint.X, TemPoint.Y] = new Grid(TemPoint, GridType.Shelf, 10);
+
+                    TempGoFurnish.transform.position = new Vector3(TemPoint.X, 0, TemPoint.Y);
+                    TempGoFurnish.transform.name = "Name";
+                    var meshRenderer = TempGoFurnish.GetComponent<MeshRenderer>();
+                    meshRenderer.material = Market.Blue;
+
+                    TempGoFurnish = null;
+                    return;
+                }
+                #endregion
+
+                #region 鼠标点击货架事件
                 if (EventSystem.current.IsPointerOverGameObject())
                 {
                     Debug.Log("点击到UI");
                 }
                 else
                 {
-                    Ray mRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    Ray mRay = Camera.main.ScreenPointToRay(mousePosition);
                     RaycastHit hit;
                     if (Physics.Raycast(mRay, out hit))
                     {
@@ -102,12 +119,72 @@ namespace Game.SuperMarket.Component
                     }
                     // 关闭UI
                     if (MouseClickPanel != null)
+                    {
                         GoManager.DestroyObject(MouseClickPanel);
-                    Debug.Log("Destroy : ");
+                        Debug.Log("Destroy : ");
+                    }
+                    // 
+
+                }
+                #endregion
+            }
+        }
+
+        /// <summary>
+        /// 鼠标移动
+        /// </summary>
+        public void OnMouseMove()
+        {
+            if (TempGoFurnish != null)
+            {
+                Ray mRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+                if (Physics.Raycast(mRay, out hit))
+                {
+                    var point = new Point((int)hit.point.x, (int)hit.point.z);
+                    if (!TemPoint.Equals(point))
+                    {
+                        TempGoFurnish.transform.position = new Vector3(point.X, 0, point.Y);
+                        TemPoint = point;
+                        Debug.Log("[" + point.X + "," + point.Y + "]");
+                    }
                 }
             }
         }
 
+        public GameObject TempGoFurnish;
+
+        public Point TemPoint = Point.Zero;
+
+
+        public void OnPrePutFurnish()
+        {
+            if (TempGoFurnish != null) return;
+            var point = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+            TempGoFurnish = GoManager.CreateCube(point, "X", Market.Green, new[] {typeof (CoFurnish)});
+            var boxColloder = TempGoFurnish.GetComponent<BoxCollider>();
+            boxColloder.enabled = false;
+        }
+
+        public void OnPutFurnish()
+        {
+            if (TempGoFurnish == null)
+            {
+
+            }
+        }
+
+        public void OnWelcome()
+        {
+            var path = Market.LookupPath();
+
+            var mUnitGo = Test.ShowNode(Market.GatePoint, "coUnit", Market.Red);
+            var coUnit = mUnitGo.AddComponent<CoUnit>();
+            coUnit.Path = path.ToArray();
+            coUnit.Index = 0;
+            coUnit.Unit = mUnitGo.transform;
+        }
 
 
     }

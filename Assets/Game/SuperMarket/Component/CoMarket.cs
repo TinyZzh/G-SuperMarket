@@ -14,23 +14,31 @@ namespace Game.SuperMarket.Component
         /// <summary>
         /// 超市等级
         /// </summary>
-        public int Level { get; set; }
+        public int Level;
         /// <summary>
         /// 网格
         /// </summary>
-        public Grid[,] Layout { get; set; }
+        public Grid[,] Layout;
         /// <summary>
         /// 摆设
         /// </summary>
-        public List<Furnish> Furnishes { get; set; }
+        public List<Furnish> Furnishes;
         /// <summary>
         /// 收银员 - 结算
         /// </summary>
-        public object Cashier { get; set; }
+        public object Cashier;
         /// <summary>
         /// 售货员 - 负责补货
         /// </summary>
-        public object Salesman { get; set; }
+        public object Salesman;
+        /// <summary>
+        /// 初始点 - 入口
+        /// </summary>
+        public Point GatePoint = new Point(19, 15);
+        /// <summary>
+        /// 结束点 - 出口
+        /// </summary>
+        public Point ExitPoint = new Point(13, 19);
 
 
         //  参数
@@ -44,20 +52,17 @@ namespace Game.SuperMarket.Component
         void Start()
         {
             Layout = new Grid[20, 20];      //  地图规格
-            var start = new Point(19, 15);  //  初始点 - 入口
-            var end = new Point(13, 19);    //  结束点 - 出口
             Furnishes = new List<Furnish>(); // 用户的摆设列表
 
-            Initialize(20, 20, start, end);
+            Initialize(20, 20, GatePoint, ExitPoint);
 
-            Layout[start.X, start.Y] = null;
-            Layout[end.X, end.Y] = null;
+            Layout[GatePoint.X, ExitPoint.Y] = null;
+            Layout[ExitPoint.X, ExitPoint.Y] = null;
             
-            var path = PathUtil.Find(start.X, start.Y, end.X, end.Y, Layout, false);
-
+            var path = LookupPath();
 
             
-            var mUnitGo = Test.ShowNode(start, "coUnit", Red);
+            var mUnitGo = Test.ShowNode(GatePoint, "coUnit", Red);
             var coUnit = mUnitGo.AddComponent<CoUnit>();
             coUnit.Path = path.ToArray();
             coUnit.Index = 0;
@@ -80,6 +85,11 @@ namespace Game.SuperMarket.Component
             //});
 
         }
+
+        public LinkedList<Point> LookupPath()
+        {
+            return PathUtil.Find(GatePoint.X, GatePoint.Y, ExitPoint.X, ExitPoint.Y, Layout, false);
+        } 
 
         public void Initialize(int width, int height, Point start, Point end)
         {

@@ -9,7 +9,13 @@ namespace Game.SuperMarket.Component
     public class CoFurnish : MonoBehaviour
     {
 
-        public Furnish Data;
+        public int Id;
+
+        public string Name;
+
+        public int Level;
+
+        public string Model;
 
 
 
